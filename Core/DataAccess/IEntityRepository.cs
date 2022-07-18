@@ -20,7 +20,7 @@ namespace Core.DataAccess
         T Get(Expression<Func<T, bool>> filter);
         /*List<T> GetAllByCategory(int categoryId); Normalde şu satırı silecektim ama neden Expression kullandığımı unutmamak için silmiyorum
          * Expressionun amacı bu tarz filtreleme operasyonlarını tek tek yazmak yerine tek bir operasyonda bu tarz işlemlerin hepsini
-         * yapabilmektir.
+         * yapabilmektir.    
          */
     }
 }

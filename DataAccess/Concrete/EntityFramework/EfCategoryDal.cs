@@ -8,6 +8,7 @@ using System.Text;
 
 namespace DataAccess.Concrete.EntityFramework
 {
+    // Ef yani entity framework. O yüzden NorthwindContex ti gönderiyoruz.
     public class EfCategoryDal : EfEntityRepositoryBase<Category,NorthwindContext> , ICategoryDal
     {
 

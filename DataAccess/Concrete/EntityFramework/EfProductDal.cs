@@ -17,6 +17,7 @@ namespace DataAccess.Concrete.EntityFramework
     // Northwind context olmak zorunda değil başka bir şey de olabilir.
     public class EfProductDal : EfEntityRepositoryBase<Product, NorthwindContext>, IProductDal
     {
+        // Ekstra istediğim join işlemi.
         public List<ProductDetailDto> getProductDetails()
         {
             using (NorthwindContext contex = new NorthwindContext())
