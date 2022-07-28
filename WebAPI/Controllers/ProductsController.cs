@@ -44,14 +44,36 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
+        [HttpPost("delete")]
+        public IActionResult Delete(Product product)
+        {
+            var result = _productService.Delete(product);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("update")]
+        public IActionResult Update(Product product)
+        {
+            var result = _productService.Update(product);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
         [HttpGet("getbyid")]
-        public IActionResult Add(int id)
+        public IActionResult Get(int id)
         {
             var result = _productService.GetById(id);
             if (result.Success)
             {
                 return Ok(result);
-            }
+            }   
             return BadRequest(result);
         }
     }

@@ -32,15 +32,15 @@ namespace WebAPI
             services.AddControllers();
             // Tüm bellekte bir tane ProductManager new'liyor. Performanslý.
             // New'lenecek classýn içinde data yoksa singleton kullanýlýr.
-            services.AddSingleton<IProductService, ProductManager>();
-            services.AddSingleton<IProductDal, EfProductDal>();
+            //services.AddSingleton<IProductService, ProductManager>();
+            //services.AddSingleton<IProductDal, EfProductDal>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
+            {   
                 app.UseDeveloperExceptionPage();
             }
                 
