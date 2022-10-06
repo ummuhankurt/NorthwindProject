@@ -18,7 +18,7 @@ namespace Business.ValidationRules.FluentValidation
             // When çok önemli
             // Örneğin tc no required, ama yabancı uyrukluysa required değil. İşte o zaman when'i kullanarak kontrol edebliyoruz.
             RuleFor(p => p.UnitPrice).GreaterThanOrEqualTo(10).When(p => p.CategoryId == 1);
-            RuleFor(p => p.ProductName).Must(StartWithA).WithMessage("Ürünler A harfi ile başlamalıdır.");
+            //RuleFor(p => p.ProductName).Must(StartWithA).WithMessage("Ürünler A harfi ile başlamalıdır.");
         }
 
         private bool StartWithA(string arg)

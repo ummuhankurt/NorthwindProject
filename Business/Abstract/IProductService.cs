@@ -18,5 +18,6 @@ namespace Business.Abstract
         IResult Delete(Product product);
         IResult Update(Product product);
         IDataResult<Product> GetById(int id);
+        IResult AddTransactionalTest(Product product); // Uygulamalarda tutarlılğı korumak için yapılan yöntem.
     }   
 }

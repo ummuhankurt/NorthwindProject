@@ -1,6 +1,10 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspets.Autofac.Caching;
+using Core.Aspets.Autofac.Performance;
+using Core.Aspets.Autofac.Transaction;
 using Core.Aspets.Autofac.Validation;
 using Core.Business;
 using Core.Utilities.Results;
@@ -10,6 +14,7 @@ using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 
 namespace Business.Concrete  
 {
@@ -22,14 +27,16 @@ namespace Business.Concrete
             _productDal = productDal;
             _categoryService = categoryService;
         }
+
+        [SecuredOperation("product.add")]
         [ValidationAspect(typeof(ProductValidator))] 
+        [CacheRemoveAspect("IProductService.Get")]
         public IResult Add(Product product) 
         {
-            var result = BusinessRules.Run(CheckIfProductCountOfCategoryCorrect(product.CategoryId),
-                CheckIfProductNameExists(product.ProductName), ChecekIfCategoryCount());
+            var result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName), ChecekIfCategoryCount());
             if (result!= null)
             {
-                return new ErrorResult();
+                return result;
             }
             _productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
@@ -41,7 +48,7 @@ namespace Business.Concrete
             _productDal.Delete(product);
             return new SuccessResult(Messages.ProductDeleted);
         }
-
+        [CacheAspect] // Key,value
         public IDataResult<List<Product>> GetAll()
         {
             if(DateTime.Now.Hour == 3)
@@ -56,7 +63,8 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(p => p.CategoryId == id));
         }
-
+        [CacheAspect]
+        [PerformanceAspect(5)] // Bu metodun çalışması 5 saniyeyi geçerse beni uyar.Sistemde yavaşlık var.
         public IDataResult<Product> GetById(int id)
         {
             return new DataResult<Product>(_productDal.Get(p => p.ProductId == id),true);
@@ -73,6 +81,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(ProductValidator))]
+        [CacheRemoveAspect("IProductService.Get")] // Bellekte, içerisinde Get olan tüm key'leri iptal et.
         public IResult Update(Product product)
         {
             if (CheckIfProductCountOfCategoryCorrect(product.CategoryId).Success)
@@ -113,6 +122,17 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.CategoryLimitExceded);
             }
             return new SuccessResult();
+        }
+        [TransactionScopeAspect]
+        public IResult AddTransactionalTest(Product product)
+        {
+            Add(product);
+            if (product.UnitPrice<10)
+                {
+                    throw new Exception("");
+                }
+            Add(product);   
+            return null;
         }
     } 
 }
